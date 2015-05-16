@@ -14,9 +14,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    let googleMapsApiKey = "AIzaSyBXfJdtZOiVJ0P_EqZQpj_mUzya54OBUcM"
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        GMSServices.provideAPIKey(googleMapsApiKey)
+        /*
+        let navController = self.window?.rootViewController as! UINavigationController
+        let productListViewController = navController.viewControllers[0] as! ProductListViewController
+        productListViewController.managedObjectContext = managedObjectContext
+        */
+        
+        let navController = self.window?.rootViewController as! UINavigationController
+        let c = navController.viewControllers[0] as! SellViewController
+        c.managedObjectContext = managedObjectContext
+        
         return true
     }
 
@@ -49,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.hris.Pop" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] as NSURL
+        return urls[urls.count-1] as! NSURL
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {
