@@ -1,5 +1,5 @@
 //
-//  AttributeValue.swift
+//  ProductImages.swift
 //  Pop
 //
 //  Created by Hrishikesh Sawant on 16/05/15.
@@ -9,11 +9,9 @@
 import Foundation
 import CoreData
 
-class AttributeValue: NSManagedObject {
+class ProductImages: NSManagedObject {
 
-    @NSManaged var id: NSNumber
     @NSManaged var name: String
-    @NSManaged var attribute: Attribute
-    @NSManaged var products: NSSet
+    @NSManaged var product: Product
 
 }

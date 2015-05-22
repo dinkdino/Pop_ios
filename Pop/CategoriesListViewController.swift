@@ -47,7 +47,7 @@ class CategoriesListViewController: UITableViewController {
         if currentItem.children.count > 0 {
             let categoriesController = storyboard.instantiateViewControllerWithIdentifier("categoriesListViewController") as! CategoriesListViewController
             categoriesController.delegate = delegate
-            categoriesController.categories = currentItem.children.allObjects as! [Category]
+            categoriesController.categories = currentItem.children.array as! [Category]
             
             self.navigationController?.pushViewController(categoriesController, animated: true)
         } else {

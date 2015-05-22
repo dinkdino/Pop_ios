@@ -20,15 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         GMSServices.provideAPIKey(googleMapsApiKey)
-        /*
-        let navController = self.window?.rootViewController as! UINavigationController
-        let productListViewController = navController.viewControllers[0] as! ProductListViewController
-        productListViewController.managedObjectContext = managedObjectContext
-        */
         
-        let navController = self.window?.rootViewController as! UINavigationController
-        let c = navController.viewControllers[0] as! SellViewController
-        c.managedObjectContext = managedObjectContext
         
         return true
     }

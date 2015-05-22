@@ -16,10 +16,22 @@ extension Product {
             let entity = NSEntityDescription.entityForName("Product", inManagedObjectContext: managedObjectContext)!
             let product = Product(entity: entity, insertIntoManagedObjectContext: managedObjectContext)
             
-            product.name = ($0["name"] ?? "") as! String;
             product.desc = ($0["description"] ?? "") as! String;
             product.price = ($0["price"] ?? 0.0) as! NSNumber;
-            product.quantity = ($0["quantity"] ?? 1) as! NSNumber;
+            
+            var images = NSMutableOrderedSet()
+            
+            if let imagesList = $0["images"] as? [String] {
+                for imageLink in imagesList {
+                    let imageEntity = NSEntityDescription.entityForName("ProductImages", inManagedObjectContext: managedObjectContext)!
+                    let productImage = ProductImages(entity: imageEntity, insertIntoManagedObjectContext: managedObjectContext)
+                    productImage.name = imageLink
+                    productImage.product = product
+                    images.addObject(productImage)
+                }
+            }
+            
+            product.images = images.copy() as! NSOrderedSet
             
             return product
         }

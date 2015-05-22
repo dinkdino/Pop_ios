@@ -136,8 +136,9 @@ class MapSearchViewController: UIViewController, CLLocationManagerDelegate, UITa
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.delegate?.selectedLocation(self.mapTasks)
-        dismissViewControllerAnimated(false, completion: nil)
-        dismissViewControllerAnimated(true, completion: nil)
+        self.searchController.dismissViewControllerAnimated(false, completion: { () -> Void in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        })
         
     }
     

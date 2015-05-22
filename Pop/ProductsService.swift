@@ -49,4 +49,23 @@ class ProductsService {
         
     }
     
+    func createProduct(product: NSDictionary, successHandler: () -> (), failureHandler: (String) -> Void) {
+        let request = Alamofire.request(ProductRouter.CreateProduct(product: product)).validate().responseJSON() {
+            (request, _, JSON, error) in
+            
+                println(JSON)
+            if error == nil {
+                successHandler()
+            } else {
+                failureHandler(error!.description)
+            }
+            
+        }
+        
+    }
+    
+    func setProductLikeStatusTo(liked: Bool, forProduct product: Product, successHandler:() -> (), failureHandler: (String) -> Void) {
+        
+    }
+    
 }

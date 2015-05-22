@@ -4,31 +4,39 @@
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="category" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Category" inverseName="attributes" inverseEntity="Category" syncable="YES"/>
-        <relationship name="values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AttributeValue" inverseName="attribute" inverseEntity="AttributeValue" syncable="YES"/>
+        <relationship name="values" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="AttributeValue" inverseName="attribute" inverseEntity="AttributeValue" syncable="YES"/>
     </entity>
     <entity name="AttributeValue" representedClassName="Pop.AttributeValue" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="attribute" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Attribute" inverseName="values" inverseEntity="Attribute" syncable="YES"/>
+        <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Product" inverseName="attributeValues" inverseEntity="Product" syncable="YES"/>
     </entity>
     <entity name="Category" representedClassName="Pop.Category" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="attributes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Attribute" inverseName="category" inverseEntity="Attribute" syncable="YES"/>
-        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Category" inverseName="parent" inverseEntity="Category" syncable="YES"/>
+        <relationship name="attributes" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Attribute" inverseName="category" inverseEntity="Attribute" syncable="YES"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Category" inverseName="parent" inverseEntity="Category" syncable="YES"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="children" inverseEntity="Category" syncable="YES"/>
+        <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Product" inverseName="category" inverseEntity="Product" syncable="YES"/>
     </entity>
     <entity name="Product" representedClassName="Pop.Product" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="price" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="quantity" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <relationship name="attributeValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AttributeValue" inverseName="products" inverseEntity="AttributeValue" syncable="YES"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="products" inverseEntity="Category" syncable="YES"/>
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ProductImages" inverseName="product" inverseEntity="ProductImages" syncable="YES"/>
+    </entity>
+    <entity name="ProductImages" representedClassName="Pop.ProductImages" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="product" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Product" inverseName="images" inverseEntity="Product" syncable="YES"/>
     </entity>
     <elements>
         <element name="Attribute" positionX="-45" positionY="54" width="128" height="105"/>
-        <element name="AttributeValue" positionX="-36" positionY="63" width="128" height="90"/>
-        <element name="Category" positionX="-63" positionY="18" width="128" height="120"/>
-        <element name="Product" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="AttributeValue" positionX="-36" positionY="63" width="128" height="105"/>
+        <element name="Category" positionX="-63" positionY="18" width="128" height="135"/>
+        <element name="Product" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="ProductImages" positionX="-36" positionY="72" width="128" height="75"/>
     </elements>
 </model>

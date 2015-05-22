@@ -60,11 +60,11 @@ class CategoryService {
             }
             
             if let subCategories = $0["sub_categories"] as? [NSDictionary] {
-                category.children = NSSet(array: self.createCategoriesFromJSON(subCategories, withParentCategory: category))
+                category.children = NSOrderedSet(array: self.createCategoriesFromJSON(subCategories, withParentCategory: category))
             }
             
             if let attributes = $0["attributes"] as? [NSDictionary] {
-                category.attributes = NSSet(array: self.createAttributesFromJSON(attributes, forCategory: category))
+                category.attributes = NSOrderedSet(array: self.createAttributesFromJSON(attributes, forCategory: category))
             }
             
             return category
@@ -88,7 +88,7 @@ class CategoryService {
             }
             
             if let values = $0["values"] as? [NSDictionary] {
-                attribute.values = NSSet(array: self.createAttributeValuesFromJSON(values, forAttribute: attribute))
+                attribute.values = NSOrderedSet(array: self.createAttributeValuesFromJSON(values, forAttribute: attribute))
             }
             
             

@@ -14,6 +14,7 @@ class SellViewController: UIViewController {
     
     @IBOutlet weak var categoryButton: UIButton!
     
+    @IBOutlet weak var sidebarButton: UIBarButtonItem!
     var managedObjectContext: NSManagedObjectContext!
     var currentImagePicker: ImagePickerView?
     
@@ -56,8 +57,29 @@ class SellViewController: UIViewController {
         }
     }
     
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        baseInit()
+    }
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        baseInit()
+    }
+    
+    func baseInit() {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        self.managedObjectContext = appDelegate.managedObjectContext
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if self.revealViewController() != nil {
+            sidebarButton.target = self.revealViewController()
+            sidebarButton.action = "revealToggle:"
+            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        }
         
         addImagePickers()
         
@@ -81,6 +103,7 @@ class SellViewController: UIViewController {
             categoryButton.titleLabel?.text = selectedCategory.name
         }
     }
+    
     
     func addImagePickers() {
         
@@ -125,7 +148,7 @@ class SellViewController: UIViewController {
                 attributedProductViews.removeAll(keepCapacity: false)
             
                 attributedProductViews.append(attributedProductView)
-                attributedProductView.attributes = selectedCategory.attributes.allObjects as! [Attribute]
+                attributedProductView.attributes = selectedCategory.attributes.array as! [Attribute]
                 
                 let margin = 16
                 attributedProductView.snp_makeConstraints({ (make: ConstraintMaker) -> Void in
@@ -204,6 +227,7 @@ class SellViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
+        println(self.navigationController)
         if segue.identifier == "categoriesListSegue" {
             let desVC = segue.destinationViewController as! CategoriesListViewController
             desVC.categories = self.categories
@@ -216,12 +240,47 @@ class SellViewController: UIViewController {
     
     
     @IBAction func doneButtonTapped(sender: AnyObject) {
-        println("Description: \(self.descriptionTextView.text)")
-        println("Price: ₹\(self.priceTextField.text)")
-        println("Location: \(self.locationLabel.text)")
-        println("Images -----")
+        
+        var product = [String: AnyObject]()
+        product["description"] = descriptionTextView.text
+        product["price"] = priceTextField.text
+        product["location"] = locationLabel.text
+        
+        
+        // Attributes
+        var attributedProducts = [NSDictionary]()
+        for attributedProductView in attributedProductViews {
+            var attributes = [NSNumber]()
+            for attributeRow in attributedProductView.attributeRows {
+                if let selectedValue = attributeRow.selectedValueId {
+                    attributes.append(selectedValue)
+                }
+            }
+            attributedProducts.append(["attributes": attributes, "quantity": attributedProductView.quantityRow.quantityTextField.text])
+        }
+        
+        product["attributed_products"] = attributedProducts
+        
+        // Image
+        var images = [NSDictionary]()
+        var imageCount = 0
         for imagePicker in imagePickers {
-            println("Image: \(imagePicker.image)")
+            if let image = imagePicker.image {
+                let imageData = UIImageJPEGRepresentation(image, 0.9)
+                let base64String = imageData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
+                let imageName = "img\(imageCount)"
+                images.append(["name": imageName, "data": base64String])
+                imageCount++
+            }
+        }
+        
+        product["images"] = images
+        
+        let productService = ProductsService(managedObjectContext: managedObjectContext)
+        productService.createProduct(product, successHandler: { () -> () in
+            println("product created successfully")
+        }) { (message) -> Void in
+            println("Failed to create new product. Error: \(message)")
         }
         
     }

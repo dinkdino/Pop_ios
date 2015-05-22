@@ -16,6 +16,8 @@ class AttributeRowView: UIControl {
     var attributeLabel: UILabel!
     var attributeValueLabel: UILabel!
     
+    var selectedValueId: NSNumber?
+    
     let margin: CGFloat = 16
     
     var valuesPicker: ActionSheetStringPicker!
@@ -51,9 +53,10 @@ class AttributeRowView: UIControl {
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         
-        var values = attribute.values.allObjects.map { return $0.name }
-        valuesPicker = ActionSheetStringPicker(title: attribute.name, rows: values , initialSelection: 0, doneBlock: { (picker, selectedIndex, _) -> Void in
-            self.attributeValueLabel.text = values[selectedIndex]
+        var names = (attribute.values.array as! [AttributeValue]).map { return $0.name }
+        valuesPicker = ActionSheetStringPicker(title: attribute.name, rows: names , initialSelection: 0, doneBlock: { (picker, selectedIndex, _) -> Void in
+            self.attributeValueLabel.text = (self.attribute.values.objectAtIndex(selectedIndex) as! AttributeValue).name
+            self.selectedValueId = (self.attribute.values.objectAtIndex(selectedIndex) as! AttributeValue).id
             }, cancelBlock: nil, origin: self.superview)
         
         
